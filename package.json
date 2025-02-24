@@ -1,15 +1,31 @@
 {
   "name": "elysia-api-MVC",
   "version": "1.0.50",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/app.ts",
+    "start": "nodemon dist/app.js"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/cookie": "^0.8.0",
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/jwt": "^1.2.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/busboy": "^1.5.4",
+    "@types/mongoose": "^5.11.97",
+    "@types/multer": "^1.4.12",
+    "bcryptjs": "^3.0.2",
+    "busboy": "^1.6.0",
+    "dotenv": "^16.4.7",
+    "elysia": "latest",
+    "mongoose": "^8.10.1",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/jsonwebtoken": "^9.0.8",
+    "bun-types": "latest",
+    "typescript": "^5.7.3"
   },
-  "module": "src/index.js"
+  "module": "src/app.js"
 }
