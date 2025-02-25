@@ -107,7 +107,9 @@ export const Codes = {
     DATA_RETRIEVED_SUCCESS: "Data retrieved successfully",
     DATA_CREATED_SUCCESS: "Data created successfully",
     DATA_UPDATED_SUCCESS: "Data updated successfully",
-    DATA_DELETED_SUCCESS: "Data deleted successfully"
+    DATA_DELETED_SUCCESS: "Data deleted successfully",
+    VALIDATION_ERROR: "Validation Failed",
+    EMAIL_ALREADY_EXISTS: "Email already exists"
   } as const
   
   export type StatusCodes = keyof typeof Codes

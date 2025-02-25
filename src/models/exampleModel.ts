@@ -1,30 +1,7 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
-// Define the interface for the document
-export interface IExample extends Document {
-  stringField: string;
-  numberField: number;
-  dateField?: Date;
-  bufferField?: Buffer;
-  booleanField?: boolean;
-  mixedField?: any;
-  objectIdField?: Types.ObjectId;
-  arrayField?: string[];
-  decimal128Field?: mongoose.Types.Decimal128;
-  mapField?: Map<string, string>;
-  nestedObject?: {
-    nestedString: string;
-    nestedNumber: number;
-  };
-  listOfLists?: number[][];
-  listOfObjects?: { subField1: string; subField2: number }[];
-  emailField: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
 // Define the schema
-const ExampleSchema = new Schema<IExample>(
+const ExampleSchema = new Schema(
   {
     /**
      * A required string field with validation on length.
@@ -190,11 +167,11 @@ ExampleSchema.index({ emailField: 1 }, { unique: true });
  * Middleware: Runs before saving a document.
  * This is useful for performing operations like password hashing or logging.
  */
-ExampleSchema.pre<IExample>('save', function (next) {
+ExampleSchema.pre('save', function (next) {
   console.log(`📝 Saving document: ${this.emailField}`);
   next();
 });
 
 // Create and export the model
-const ExampleModel = mongoose.model<IExample>('ExampleModel', ExampleSchema);
+const ExampleModel = mongoose.model('ExampleModel', ExampleSchema);
 export default ExampleModel;
