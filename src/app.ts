@@ -6,6 +6,8 @@ import { mongoDBConnection } from "./services/mongoConnection";
 import { healthRoutes } from "./routes/healthRoute";
 import { rateLimit } from "elysia-rate-limit";
 import { helmet } from "elysia-helmet";
+import jwt from "@elysiajs/jwt";
+
 
 // Initialize MongoDB connection
 mongoDBConnection();
@@ -35,6 +37,13 @@ const app = new Elysia()
   .use(cors({
     origin: ["*"] // Update with allowed origins for better security
   }))
+
+  .use(
+    jwt({
+      name: "jwt",
+      secret: process.env.JWT_SECRET_KEY || "your-super-secret-key",
+    })
+  ) // ✅ Global JWT Middleware
 
   // Register user-related routes (e.g., login, authentication, profile management)
   .use(userRoutes) // demo route for jwt verification
