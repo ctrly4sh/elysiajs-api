@@ -16,10 +16,8 @@ export const mongoDBConnection = async() => {
     try {
 
             // Connect to MongoDB
-            await mongoose.connect(mongoUri, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-              } as mongoose.ConnectOptions); // Type assertions for Typescript
+            await mongoose.connect(mongoUri)
+               // Type assertions for Typescript
         console.log("🗄️ Connected to MongoDB");
 
     }catch(error: any){
