@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
 // Define the interface for the document
-interface IExample extends Document {
+export interface IExample extends Document {
   stringField: string;
   numberField: number;
   dateField?: Date;
@@ -26,6 +26,10 @@ interface IExample extends Document {
 // Define the schema
 const ExampleSchema = new Schema<IExample>(
   {
+    /**
+     * A required string field with validation on length.
+     * Default value: "Default String".
+     */
     stringField: {
       type: String,
       required: [true, 'String field is required'],
@@ -33,6 +37,11 @@ const ExampleSchema = new Schema<IExample>(
       maxlength: [50, 'String field must be less than 50 characters long'],
       default: 'Default String',
     },
+
+    /**
+     * A required number field with min and max constraints.
+     * Default value: 42.
+     */
     numberField: {
       type: Number,
       required: [true, 'Number field is required'],
@@ -40,36 +49,76 @@ const ExampleSchema = new Schema<IExample>(
       max: [100, 'Number field must be less than or equal to 100'],
       default: 42,
     },
+
+    /**
+     * Date field, defaulting to the current timestamp.
+     */
     dateField: {
       type: Date,
       default: Date.now,
     },
+
+    /**
+     * Buffer field for storing binary data.
+     */
     bufferField: Buffer,
+
+    /**
+     * Boolean field with a default value of false.
+     */
     booleanField: {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * A field that can store any data type.
+     * Default value: an empty object.
+     */
     mixedField: {
       type: Schema.Types.Mixed,
       default: {},
     },
+
+    /**
+     * ObjectId reference to another model.
+     */
     objectIdField: {
       type: Schema.Types.ObjectId,
       ref: 'ExampleModel',
     },
+
+    /**
+     * Array of strings with a default value.
+     */
     arrayField: {
       type: [String],
       default: ['defaultItem1', 'defaultItem2'],
     },
+
+    /**
+     * Decimal128 field for storing precise decimal values.
+     */
     decimal128Field: {
       type: Schema.Types.Decimal128,
       default: 0.0,
     },
+
+    /**
+     * A Map field that stores key-value pairs.
+     */
     mapField: {
       type: Map,
       of: String,
-      default: new Map([['key1', 'value1'], ['key2', 'value2']]),
+      default: new Map([
+        ['key1', 'value1'],
+        ['key2', 'value2'],
+      ]),
     },
+
+    /**
+     * A nested object containing specific subfields.
+     */
     nestedObject: {
       nestedString: {
         type: String,
@@ -80,10 +129,21 @@ const ExampleSchema = new Schema<IExample>(
         default: 10,
       },
     },
+
+    /**
+     * A 2D array of numbers.
+     */
     listOfLists: {
       type: [[Number]],
-      default: [[1, 2, 3], [4, 5, 6]],
+      default: [
+        [1, 2, 3],
+        [4, 5, 6],
+      ],
     },
+
+    /**
+     * An array of objects with predefined subfields.
+     */
     listOfObjects: {
       type: [
         {
@@ -102,6 +162,10 @@ const ExampleSchema = new Schema<IExample>(
         { subField1: 'Default2', subField2: 200 },
       ],
     },
+
+    /**
+     * Email field with validation, uniqueness, and automatic trimming/lowercasing.
+     */
     emailField: {
       type: String,
       required: [true, 'Email is required'],
@@ -112,17 +176,22 @@ const ExampleSchema = new Schema<IExample>(
     },
   },
   {
-    timestamps: true,
-    versionKey: false,
+    timestamps: true, // Adds createdAt and updatedAt fields automatically
+    versionKey: false, // Disables the __v field (used for versioning)
   }
 );
 
-// Add index on emailField for uniqueness
+/**
+ * Adds a unique index on the email field to enforce uniqueness at the database level.
+ */
 ExampleSchema.index({ emailField: 1 }, { unique: true });
 
-// Middleware example (pre-save hook for validation)
+/**
+ * Middleware: Runs before saving a document.
+ * This is useful for performing operations like password hashing or logging.
+ */
 ExampleSchema.pre<IExample>('save', function (next) {
-  console.log('Saving document...');
+  console.log(`📝 Saving document: ${this.emailField}`);
   next();
 });
 
