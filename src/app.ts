@@ -71,11 +71,10 @@ const app = new Elysia()
   )
 
   //endpoint for userRoutes
-  .group("/api/v1", (app: any) => userRoutes(app))
+  .group("/api/v1",(app: any) => userRoutes(app))
 
   //endpoint for userRoutes
   .group("/api/v1", (app: any) => healthRoutes(app))
-
   
   const startServer = async () => {
     try {

@@ -90,23 +90,23 @@ const UsersSchema = new Schema({
   // Email field with validation for format, uniqueness, and trimming
   emailField: {
     type: String,
-    required: [true, 'Email is required'], // Ensure email is required
-    unique: true, // Enforce uniqueness
-    lowercase: true, // Convert to lowercase
-    trim: true, // Remove leading/trailing spaces
+    required: [true, 'Email is required'],
+    lowercase: true,
+    trim: true,
+    unique: true,  // Ensures uniqueness
     validate: {
       validator: function (email: string) {
-        return /\S+@\S+\.\S+/.test(email); // Simple email regex validation
+        return /\S+@\S+\.\S+/.test(email);
       },
       message: (props) => `${props.value} is not a valid email!`
     }
   }
+  
 }, {
   timestamps: true, // Add createdAt and updatedAt timestamps
   versionKey: false // Disable versioning
 });
 
-// Add index on emailField for uniqueness
 
 // Middleware Users (pre-save hook for validation)
 UsersSchema.pre('save', function(next) {

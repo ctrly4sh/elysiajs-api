@@ -9,39 +9,30 @@ interface CustomContext extends Context {
   query: { id?: string; page?: string };
   set: any;
 }
-
 export const createUsers = async ({ body, set }: CustomContext) => {
   try {
-    // Check if the email is already in the database
+    if (!body.emailField) {
+      set.status = Codes.BAD_REQUEST;
+      return ResponseHandler.sendError(set, "Email is required.", Codes.BAD_REQUEST, Messages.VALIDATION_ERROR);
+    }
+
     const existingUser = await userModel.findOne({ emailField: body.emailField });
 
     if (existingUser) {
-      // If email already exists, return an error
-      set.status = Codes.CONFLICT;  // CONFLICT status code (409)
-      return ResponseHandler.sendError(set, "Email already exists.", Codes.CONFLICT, Messages.EMAIL_ALREADY_EXISTS,);  //Custom messages for error
+      set.status = Codes.CONFLICT;
+      return ResponseHandler.sendError(set, "Email already exists.", Codes.CONFLICT, Messages.EMAIL_ALREADY_EXISTS);
     }
 
-    // Proceed with user creation if email is unique
     const newUser = new userModel(body);
     const result = await newUser.save();
     return ResponseHandler.sendSuccess(set, result, Codes.CREATED, Messages.DATA_CREATED_SUCCESS);
   } catch (error: any) {
-    // Handle Mongoose validation errors
-    if (error.name === 'ValidationError') {
-      set.status = Codes.BAD_REQUEST; //400
-      const errors: any = {};
-      for (const field in error.errors) {
-        errors[field] = error.errors[field].message;
-      }
-      return ResponseHandler.sendError(set, error,Codes.BAD_REQUEST, Messages.VALIDATION_ERROR);  //Shows each validator
-
-    }
-    // Handle other errors
     console.error("Error creating user:", error);
     set.status = Codes.INTERNAL_SERVER_ERROR;
-    return ResponseHandler.sendError(set, error, Codes.INTERNAL_SERVER_ERROR, Messages.INTERNAL_SERVER_ERROR, );
+    return ResponseHandler.sendError(set, error, Codes.INTERNAL_SERVER_ERROR, Messages.INTERNAL_SERVER_ERROR);
   }
 };
+
 
 export const getUsers = async ({ query, set }: CustomContext) => {
   try {
